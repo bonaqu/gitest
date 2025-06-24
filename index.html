@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Какой ты персонаж Genshin Impact?</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e0e0ff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://genshin.softodrom.by/wp-content/uploads/2020/11/genshin_oboi_12-scaled.jpg'); 
+            background-size: cover;
+            background-attachment: fixed;
+            background-blend-mode: multiply;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* Анимированный фон */
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 15s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(25, 30, 50, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #4a4a8a;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        /* Секретный элемент */
+        .secret-paimon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: url('https://static.wikia.nocookie.net/genshin-impact/images/d/d2/Emoji_Paimon_247.png') center/contain no-repeat;
+            opacity: 0.2;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+        .secret-paimon:hover {
+            opacity: 0.8;
+            transform: rotate(10deg) scale(1.2);
+        }
+        header {
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.pcgamesn.com/wp-content/sites/pcgamesn/2022/08/genshin-impact-sumeru-desert-pyramids-2.jpg')  center/cover;
+            opacity: 0.2;
+        }
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            font-weight: 800;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            color: #d0d0ff;
+            position: relative;
+        }
+        /* Секретная надпись */
+        .secret-text {
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 0.8rem;
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .secret-text:hover {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .elements {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .element {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .element:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+        .pyro { background: linear-gradient(135deg, #ff8c00, #ff4500); }
+        .hydro { background: linear-gradient(135deg, #00bfff, #1e90ff); }
+        .anemo { background: linear-gradient(135deg, #40e0d0, #20b2aa); }
+        .electro { background: linear-gradient(135deg, #9370db, #7b68ee); }
+        .dendro { background: linear-gradient(135deg, #32cd32, #228b22); }
+        .cryo { background: linear-gradient(135deg, #87cefa, #00bfff); }
+        .geo { background: linear-gradient(135deg, #ffd700, #daa520); }
+        .test-container {
+            padding: 30px;
+        }
+        .question {
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #a3d9ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2 i {
+            color: #ff7de3;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        @media (min-width: 600px) {
+            .options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .option {
+            background: rgba(40, 45, 70, 0.7);
+            border: 2px solid #4a4a8a;
+            border-radius: 15px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+        .option:hover {
+            background: rgba(60, 65, 100, 0.8);
+            border-color: #6a6ac0;
+            transform: translateY(-3px);
+        }
+        .option.selected {
+            background: rgba(80, 90, 150, 0.8);
+            border-color: #a3d9ff;
+            box-shadow: 0 0 20px rgba(100, 150, 255, 0.4);
+        }
+        /* Секретная подсказка */
+        .option-secret {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.7rem;
+        }
+        .option-icon {
+            font-size: 24px;
+            min-width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .option-text {
+            font-size: 1.1rem;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-prev {
+            background: linear-gradient(135deg, #6a6ac0, #4a4a8a);
+            color: white;
+        }
+        .btn-next {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+        }
+        .btn-restart {
+            background: linear-gradient(135deg, #32cd32, #228b22);
+            color: white;
+            margin: 20px auto;
+            display: block;
+        }
+        .result {
+            text-align: center;
+            padding: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+        .character-card {
+            background: linear-gradient(135deg, #2c2c54, #40407a);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 2px solid #6a6ac0;
+            position: relative;
+            overflow: hidden;
+        }
+        .character-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.hdwallpapers.in/download/genshin_impact_traveler_hd_genshin_impact-1920x1080.jpg')  center/cover;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        .character-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid #6a6ac0;
+            margin: 0 auto 20px;
+            background: #2c2c54;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 100px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+        }
+        .character-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(100, 200, 255, 0.6);
+        }
+        .character-name {
+            font-size: 2.5rem;
+            margin: 20px 0 10px;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .character-title {
+            font-size: 1.3rem;
+            color: #a3d9ff;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .character-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #d0d0ff;
+            text-align: left;
+            padding: 10px;
+            background: rgba(30, 35, 60, 0.5);
+            border-radius: 10px;
+        }
+        .character-quote {
+            font-style: italic;
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 3px solid #6a6ac0;
+            background: rgba(100, 100, 200, 0.1);
+        }
+        .character-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        .stat {
+            background: rgba(60, 65, 100, 0.6);
+            padding: 15px;
+            border-radius: 12px;
+            min-width: 120px;
+            transition: transform 0.3s ease;
+        }
+        .stat:hover {
+            transform: translateY(-5px);
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff7de3;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: #a3d9ff;
+        }
+        .progress-container {
+            background: rgba(40, 45, 70, 0.7);
+            border-radius: 10px;
+            height: 20px;
+            margin: 30px 0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            border-radius: 10px;
+            width: 0;
+            transition: width 1s ease;
+        }
+        .hidden {
+            display: none;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #a3d9ff;
+            font-size: 0.9rem;
+            border-top: 1px solid #4a4a8a;
+            position: relative;
+        }
+        .easter-egg {
+            color: #ff7de3;
+            cursor: pointer;
+            text-decoration: underline dotted;
+            transition: all 0.3s ease;
+        }
+        .easter-egg:hover {
+            text-shadow: 0 0 10px rgba(255, 125, 227, 0.7);
+        }
+        .hint {
+            background: rgba(106, 17, 203, 0.2);
+            border-left: 4px solid #6a11cb;
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .comic {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #ffcc66;
+        }
+        /* Секретная кнопка */
+        .secret-btn {
+            position: absolute;
+            bottom: 5px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+        .secret-btn:hover {
+            background: rgba(255, 200, 0, 0.3);
+            color: rgba(255, 255, 255, 0.8);
+        }
+        /* Анимация для примогемов */
+        .primogem {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: url('https://static.wikia.nocookie.net/genshin-impact/images/4/44/Item_Primogem.png')  center/contain no-repeat;
+            opacity: 0;
+            z-index: 200;
+            pointer-events: none;
+        }
+        /* Секретное сообщение */
+        .secret-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 40, 0.95);
+            border: 2px solid #6a11cb;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            z-index: 100;
+            box-shadow: 0 0 50px rgba(100, 50, 200, 0.8);
+            display: none;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #aaa;
+        }
+        
+        /* НОВЫЕ СТИЛИ ДЛЯ ПАСХАЛОК */
+        .secret-area {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            opacity: 0.05;
+            z-index: 0;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .secret-area:hover {
+            opacity: 0.8;
+            transform: scale(1.5);
+            background: rgba(255, 215, 0, 0.2);
+        }
+        
+        .secret-area.left {
+            left: 5%;
+            top: 20%;
+        }
+        
+        .secret-area.right {
+            right: 5%;
+            bottom: 30%;
+        }
+        
+        .secret-area.top {
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .secret-area.bottom {
+            bottom: 10%;
+            right: 20%;
+        }
+        
+        .secret-area.center {
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .secret-hint {
+            position: absolute;
+            background: rgba(30, 30, 60, 0.9);
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: #ffcc66;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .secret-area:hover .secret-hint {
+            opacity: 1;
+        }
+        
+        /* Анимация для секретного архива */
+        @keyframes archive-pulse {
+            0% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.1; }
+        }
+        
+        .archive-secret {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 30px;
+            height: 30px;
+            background: url('https://static.wikia.nocookie.net/genshin-impact/images/0/0b/Document_Icon.png') center/contain no-repeat;
+            opacity: 0.1;
+            cursor: pointer;
+            z-index: 5;
+            animation: archive-pulse 3s infinite;
+        }
+        
+        /* Стиль для секретного сообщения о примогемах */
+        .primogem-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 40, 0.95);
+            border: 2px solid #6a11cb;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            z-index: 100;
+            box-shadow: 0 0 50px rgba(100, 50, 200, 0.8);
+            display: none;
+            text-align: center;
+        }
+        
+        /* Стили для эффекта Цицина */
+        .cicins-effect {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: url('https://static.wikia.nocookie.net/genshin-impact/images/8/8c/Item_Flaming_Red_Bolognese.png') center/contain no-repeat;
+            pointer-events: none;
+            z-index: 150;
+            opacity: 0;
+        }
+        
+        /* Стили для скрытого текста в вопросах */
+        .hidden-text {
+            color: transparent;
+            font-size: 1px;
+            position: absolute;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Секретные области для новых пасхалок -->
+    <div class="secret-area left" title="Секретная область">
+        <div class="secret-hint">Секреты Абиса</div>
+        <i class="fas fa-dungeon"></i>
+    </div>
+    
+    <div class="secret-area right" title="Секретная область">
+        <div class="secret-hint">Тайны Энканомии</div>
+        <i class="fas fa-moon"></i>
+    </div>
+    
+    <div class="secret-area top" title="Секретная область">
+        <div class="secret-hint">Небесный Небис</div>
+        <i class="fas fa-cloud"></i>
+    </div>
+    
+    <div class="secret-area bottom" title="Секретная область">
+        <div class="secret-hint">Подземные царства</div>
+        <i class="fas fa-mountain"></i>
+    </div>
+    
+    <div class="secret-area center" title="Секретная область">
+        <div class="secret-hint">Сердце Тейвата</div>
+        <i class="fas fa-heart"></i>
+    </div>
+    
+    <div id="secret-archive" class="archive-secret" title="Секретный архив"></div>
+    
+    <div class="container">
+        <div id="secret-paimon-btn" class="secret-paimon" title="Паймон не еда!"></div>
+        <header>
+            <h1><i class="fas fa-dragon"></i> Какой ты персонаж Genshin Impact?</h1>
+            <p class="subtitle">Пройди тест и узнай, кого из жителей Тейвата ты напоминаешь по характеру, стилю и отношению к жизни!</p>
+            <div class="elements">
+                <div class="element pyro"><i class="fas fa-fire"></i></div>
+                <div class="element hydro"><i class="fas fa-tint"></i></div>
+                <div class="element anemo"><i class="fas fa-wind"></i></div>
+                <div class="element electro"><i class="fas fa-bolt"></i></div>
+                <div class="element dendro"><i class="fas fa-leaf"></i></div>
+                <div class="element cryo"><i class="fas fa-snowflake"></i></div>
+                <div class="element geo"><i class="fas fa-mountain"></i></div>
+            </div>
+            <div id="secret-teyvat-btn" class="secret-text">Секреты Тейвата</div>
+            <!-- Скрытый текст для пасхалки -->
+            <div class="hidden-text">Секретная пасхалка: Нажми Ctrl+Alt+G во время теста</div>
+        </header>
+        <div class="test-container">
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div id="question-container" aria-live="polite"></div>
+            <div class="navigation">
+                <button class="btn-prev" id="prev-btn" disabled>
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+                <button class="btn-next" id="next-btn" disabled>
+                    Далее <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        <div id="result-container" class="result hidden"></div>
+        <footer>
+            <p>Этот тест создан исключительно для развлечения и не является официальным продуктом HoYoverse.</p>
+            <p>Genshin Impact - зарегистрированная торговая марка HoYoverse.</p>
+            <p id="paimon-food-btn" class="easter-egg">Секреты Тейвата... <i class="fas fa-seedling"></i></p>
+            <div id="zhongli-wisdom-btn" class="secret-btn" title="Секретная кнопка">?</div>
+        </footer>
+    </div>
+    
+    <div class="secret-message" id="secret-message">
+        <div id="close-message-btn" class="close-btn">✕</div>
+        <div id="message-content"></div>
+    </div>
+    
+    <div class="primogem-message" id="primogem-message">
+        <div class="close-btn">✕</div>
+        <h3>Секрет Примогемов!</h3>
+        <p>Вы нашли секретную механику примогемов!</p>
+        <p>В игре Genshin Impact существует более 300 способов получить бесплатные примогемы:</p>
+        <ul style="text-align: left; margin: 15px 0;">
+            <li>Исследование мира - до 5000 примогемов</li>
+            <li>Ежедневные задания - 60 примогемов в день</li>
+            <li>Спиральная Бездна - до 600 примогемов каждые 2 недели</li>
+        </ul>
+        <p>Продолжайте исследовать Тейват!</p>
+    </div>
+    
+    <script>
+        // Вопросы и варианты ответов
+        const questions = [
+            {
+                question: "Как бы ты описал(а) свой подход к приключениям?",
+                icon: "fa-binoculars",
+                options: [
+                    { text: "Планирую каждую деталь, как генерал перед битвой", icon: "fa-chess", element: "geo", secret: "Как настоящий стратег" },
+                    { text: "Просто иду туда, куда ветер несёт", icon: "fa-wind", element: "anemo", secret: "Свобода прежде всего" },
+                    { text: "С энтузиазмом! Чем опаснее, тем лучше!", icon: "fa-fire", element: "pyro", secret: "Огонь в душе" },
+                    { text: "Рассчитываю риски и выгоды, как истинный тактик", icon: "fa-brain", element: "electro", secret: "Холодный расчет" },
+                    { text: "Собираю команду - вместе веселее!", icon: "fa-users", element: "hydro", secret: "Командный дух" },
+                    { text: "Предпочитаю наблюдать со стороны и делать заметки", icon: "fa-book", element: "dendro", secret: "Мудрый наблюдатель" }
+                ]
+            },
+            {
+                question: "Что для тебя важнее всего в жизни?",
+                icon: "fa-star",
+                options: [
+                    { text: "Свобода делать то, что хочется", icon: "fa-dove", element: "anemo", secret: "Ветер перемен" },
+                    { text: "Сила, чтобы защищать то, что дорого", icon: "fa-fist-raised", element: "pyro", secret: "Защитник слабых" },
+                    { text: "Знания и мудрость", icon: "fa-graduation-cap", element: "dendro", secret: "Искатель истины" },
+                    { text: "Справедливость и порядок", icon: "fa-balance-scale", element: "geo", secret: "Нерушимый устав" },
+                    { text: "Гармония с окружающим миром", icon: "fa-spa", element: "hydro", secret: "Поток жизни" },
+                    { text: "Инновации и прогресс", icon: "fa-microchip", element: "electro", secret: "Искра будущего" }
+                ]
+            },
+            {
+                question: "Твоя реакция на неожиданную проблему?",
+                icon: "fa-bolt",
+                options: [
+                    { text: "Атакую первым, задаю вопросы потом", icon: "fa-crosshairs", element: "pyro", secret: "Решительные действия" },
+                    { text: "Анализирую и ищу оптимальное решение", icon: "fa-search", element: "dendro", secret: "Тактический подход" },
+                    { text: "Защищаюсь и жду подходящего момента", icon: "fa-shield-alt", element: "geo", secret: "Нерушимая оборона" },
+                    { text: "Ищу нестандартный подход", icon: "fa-lightbulb", element: "electro", secret: "Креативное решение" },
+                    { text: "Обращаюсь за помощью к другим", icon: "fa-hands-helping", element: "hydro", secret: "Командная работа" },
+                    { text: "Уклоняюсь и меняю направление", icon: "fa-compress-arrows-alt", element: "anemo", secret: "Гибкость мышления" }
+                ]
+            },
+            {
+                question: "Какой стиль боя тебе ближе?",
+                icon: "fa-shield-alt",
+                options: [
+                    { text: "Мощные удары, разрушающие всё на своём пути", icon: "fa-hammer", element: "pyro", secret: "Сокрушительная сила" },
+                    { text: "Изящные движения, как танец", icon: "fa-music", element: "hydro", secret: "Искусство в движении" },
+                    { text: "Контроль дистанции и маневренность", icon: "fa-bow-arrow", element: "anemo", secret: "Свобода маневра" },
+                    { text: "Создание конструкций и стратегических объектов", icon: "fa-cube", element: "geo", secret: "Тактическое превосходство" },
+                    { text: "Комбинации и технологические решения", icon: "fa-cogs", element: "electro", secret: "Технологии побеждают" },
+                    { text: "Использование окружающей среды", icon: "fa-tree", element: "dendro", secret: "Единство с природой" }
+                ]
+            },
+            {
+                question: "Как ты относишься к правилам?",
+                icon: "fa-gavel",
+                options: [
+                    { text: "Строго соблюдаю - порядок превыше всего", icon: "fa-list-ol", element: "geo", secret: "Дисциплина важна" },
+                    { text: "Соблюдаю, если они логичны и справедливы", icon: "fa-thumbs-up", element: "dendro", secret: "Разумный подход" },
+                    { text: "Нарушаю, если они мешают свободе", icon: "fa-times-circle", element: "anemo", secret: "Бунтарский дух" },
+                    { text: "Игнорирую - у меня свои правила", icon: "fa-user-alt", element: "electro", secret: "Индивидуализм" },
+                    { text: "Правила? Что это? Я живу по велению сердца!", icon: "fa-heart", element: "pyro", secret: "Сердце диктует" },
+                    { text: "Считаю, что правила должны служить людям, а не наоборот", icon: "fa-hands", element: "hydro", secret: "Гибкие принципы" }
+                ]
+            },
+            {
+                question: "Твой идеальный день?",
+                icon: "fa-sun",
+                options: [
+                    { text: "Исследование древних руин и загадок", icon: "fa-history", element: "dendro", secret: "Любопытство" },
+                    { text: "Поединки и тренировки", icon: "fa-dumbbell", element: "pyro", secret: "Самосовершенствование" },
+                    { text: "Создание чего-то нового", icon: "fa-tools", element: "electro", secret: "Творческий порыв" },
+                    { text: "Отдых в спокойном красивом месте", icon: "fa-umbrella-beach", element: "hydro", secret: "Гармония" },
+                    { text: "Путешествия и новые знакомства", icon: "fa-hiking", element: "anemo", secret: "Дух странствий" },
+                    { text: "Планирование будущих проектов", icon: "fa-tasks", element: "geo", secret: "Стратегическое мышление" }
+                ]
+            },
+            {
+                question: "Какой ты видишь свою роль в команде?",
+                icon: "fa-users",
+                options: [
+                    { text: "Лидер, ведущий за собой", icon: "fa-crown", element: "pyro", secret: "Прирожденный лидер" },
+                    { text: "Стратег и тактик", icon: "fa-chess-knight", element: "dendro", secret: "Мозг команды" },
+                    { text: "Защитник и опора", icon: "fa-shield-alt", element: "geo", secret: "Нерушимая стена" },
+                    { text: "Инноватор и изобретатель", icon: "fa-flask", element: "electro", secret: "Двигатель прогресса" },
+                    { text: "Дипломат и переговорщик", icon: "fa-handshake", element: "hydro", secret: "Миротворец" },
+                    { text: "Свободный агент, помогающий по ситуации", icon: "fa-feather-alt", element: "anemo", secret: "Универсальный солдат" }
+                ]
+            },
+            {
+                question: "Как ты восстанавливаешь силы?",
+                icon: "fa-moon",
+                options: [
+                    { text: "За чашечкой хорошего вина в компании", icon: "fa-wine-glass", element: "anemo", secret: "Душевные разговоры" },
+                    { text: "В одиночестве, размышляя о жизни", icon: "fa-mountain", element: "geo", secret: "Созерцание" },
+                    { text: "На шумной вечеринке с друзьями", icon: "fa-music", element: "pyro", secret: "Энергия толпы" },
+                    { text: "За чтением интересной книги", icon: "fa-book-open", element: "dendro", secret: "Погружение в знания" },
+                    { text: "Экспериментируя с новыми технологиями", icon: "fa-atom", element: "electro", secret: "Научный поиск" },
+                    { text: "Расслабляясь у воды", icon: "fa-water", element: "hydro", secret: "Умиротворение" }
+                ]
+            },
+            {
+                question: "Что для тебя значит дом?",
+                icon: "fa-home",
+                options: [
+                    { text: "Место, где я могу быть собой", icon: "fa-user", element: "anemo", secret: "Личное пространство" },
+                    { text: "Крепость, которую нужно защищать", icon: "fa-fort-awesome", element: "geo", secret: "Цитадель" },
+                    { text: "Точка сбора для друзей и близких", icon: "fa-users", element: "pyro", secret: "Семейный очаг" },
+                    { text: "Библиотека знаний и воспоминаний", icon: "fa-book", element: "dendro", secret: "Храм мудрости" },
+                    { text: "Лаборатория для экспериментов", icon: "fa-flask", element: "electro", secret: "Творческая мастерская" },
+                    { text: "Оазис спокойствия и гармонии", icon: "fa-spa", element: "hydro", secret: "Гармоничное пространство" }
+                ]
+            },
+            {
+                question: "Какой подарок ты бы оценил больше всего?",
+                icon: "fa-gift",
+                options: [
+                    { text: "Билет в неизведанную страну", icon: "fa-ticket-alt", element: "anemo", secret: "Дух приключений" },
+                    { text: "Редкий артефакт с историей", icon: "fa-gem", element: "geo", secret: "Связь с прошлым" },
+                    { text: "Возможность испытать себя в бою", icon: "fa-shield-alt", element: "pyro", secret: "Испытание силы" },
+                    { text: "Древний манускрипт с тайными знаниями", icon: "fa-scroll", element: "dendro", secret: "Жажда знаний" },
+                    { text: "Инновационный гаджет или устройство", icon: "fa-mobile-alt", element: "electro", secret: "Технологический восторг" },
+                    { text: "Время, проведенное с близкими", icon: "fa-heart", element: "hydro", secret: "Душевное тепло" }
+                ]
+            }
+        ];
+        
+        const characters = {
+            pyro: [
+                {
+                    name: "Дилюк",
+                    title: "Тёмный рыцарь винокурни Рассвет",
+                    icon: "fa-fire",
+                    description: "Ты - загадочный и сильный персонаж с горячим сердцем под холодной внешностью. Как Дилюк, ты готов защищать то, что тебе дорого, любой ценой. Твоя преданность семье и друзьям не знает границ, хотя иногда ты можешь показаться отстранённым. Твоя сила в решительности и готовности действовать, когда другие колеблются.",
+                    quote: "«Иногда нужно сжечь мосты, чтобы двигаться вперед. Огонь очищает и даёт новую жизнь.»",
+                    stats: { "Сила": 95, "Верность": 90, "Стратегия": 75, "Хладнокровие": 85 },
+                    secrets: [
+                        "Секретная страсть: коллекционирование редких вин",
+                        "Ночной страж Мондштадта",
+                        "Мастер скрытого наблюдения"
+                    ]
+                },
+                {
+                    name: "Ёимия",
+                    title: "Королева летнего фестиваля",
+                    icon: "fa-firework",
+                    description: "Ты - душа компании, как яркая и жизнерадостная Ёимия! Твоя энергия и энтузиазм заразительны, а любовь к праздникам и веселью не знает границ. Ты умеешь находить радость в мелочах и зажигать искру вдохновения в окружающих. Твои фейерверки не только красивы, но и символизируют твой горячий и страстный характер!",
+                    quote: "«Жизнь слишком коротка, чтобы грустить! Запустим фейерверк и улыбнёмся ночи!»",
+                    stats: { "Харизма": 95, "Креативность": 90, "Радость": 100, "Энергия": 95 },
+                    secrets: [
+                        "Знает секреты всех жителей Инадзумы",
+                        "Мастер импровизации",
+                        "Может сделать праздник из ничего"
+                    ]
+                }
+            ],
+            hydro: [
+                {
+                    name: "Фурина",
+                    title: "Бывшая Архонт Гидро",
+                    icon: "fa-crown",
+                    description: "О, mon chéri! Ты - настоящая звезда, как великолепная Фурина! Твой драматический талант и чувство стиля не имеют равных. Ты превращаешь каждый день в театральное представление, где ты и режиссёр, и главная героиня. Твоя харизма покоряет сердца, хотя иногда ты можешь быть немного... чрезмерной. Но кто может устоять перед твоим шармом?",
+                    quote: "«Жизнь — это театр, а мы в ней актёры! Так сыграем же свои роли с блеском!»",
+                    stats: { "Харизма": 100, "Драма": 95, "Элегантность": 90, "Артистизм": 98 },
+                    secrets: [
+                        "Владеет 17 видами сценического фехтования",
+                        "Имеет коллекцию из 324 шляп",
+                        "Тайно пишет мемуары"
+                    ]
+                },
+                {
+                    name: "Тарталья",
+                    title: "Одиннадцатый Предвестник Фатуи",
+                    icon: "fa-water",
+                    description: "Ты - непредсказуемый и страстный боец, как загадочный Тарталья! Твоя любовь к вызовам и битвам делает тебя опасным противником и верным союзником. Ты всегда ищешь сильнейших противников, чтобы испытать свои пределы. Под твоей дружелюбной улыбкой скрывается боевой дух настоящего воина, готового к любым испытаниям.",
+                    quote: "«Скука — худший враг! Давай сразимся, и пусть победит сильнейший!»",
+                    stats: { "Сила": 90, "Адаптивность": 95, "Страсть": 90, "Амбиции": 85 },
+                    secrets: [
+                        "Тайно тренируется по 8 часов в день",
+                        "Имеет слабость к детским игрушкам",
+                        "Мечтает сразиться с Архонтами"
+                    ]
+                }
+            ],
+            anemo: [
+                {
+                    name: "Венти",
+                    title: "Бард ветров",
+                    icon: "fa-music",
+                    description: "Ты - свободный дух, как вечно юный Венти! Твоя любовь к свободе, поэзии и хорошему вину не знает границ. Ты странствуешь по миру, сочиняя песни и наслаждаясь каждым моментом. Хотя иногда ты можешь показаться беззаботным, в нужный момент ты всегда приходишь на помощь друзьям. Твоя истинная сила - в умении приносить перемены и надежду.",
+                    quote: "«Что такое свобода? Когда никто не ищет тебя, и ты можешь лететь куда пожелаешь...»",
+                    stats: { "Свобода": 100, "Креативность": 95, "Мудрость": 85, "Беззаботность": 90 },
+                    secrets: [
+                        "Может уснуть где угодно",
+                        "Знает все таверны Тейвата",
+                        "Тайный покровитель Мондштадта"
+                    ]
+                },
+                {
+                    name: "Сахароза",
+                    title: "Гарцующая сладость",
+                    icon: "fa-flask",
+                    description: "Ты - скромный гений, как талантливая Сахароза! Твоя страсть к науке и экспериментам сочетается с удивительной добротой и застенчивостью. Хотя ты предпочитаешь оставаться в тени, твои изобретения способны изменить мир. Твоя невинная любознательность и преданность своему делу вдохновляют окружающих на великие свершения.",
+                    quote: "«Ой! Извините... Я просто хотела провести небольшой эксперимент...»",
+                    stats: { "Интеллект": 95, "Любопытство": 90, "Скромность": 85, "Находчивость": 88 },
+                    secrets: [
+                        "Создала новый вид сладких цветов",
+                        "Ведет 7 научных журналов",
+                        "Боится собственных изобретений"
+                    ]
+                }
+            ],
+            electro: [
+                {
+                    name: "Райдэн Сёгун",
+                    title: "Абсолютный правитель Инадзумы",
+                    icon: "fa-bolt",
+                    description: "Ты - властный и решительный лидер, как грозная Райдэн Сёгун! Твоя непоколебимая воля и сила внушают уважение и страх. Ты веришь в вечность и порядок, готовый защищать свои идеалы любой ценой. Хотя иногда ты можешь казаться холодной и отстранённой, в глубине души ты заботишься о своём народе и его будущем.",
+                    quote: "«Вечность неизменна. А то, что изменчиво — недостойно вечности.»",
+                    stats: { "Власть": 100, "Решимость": 95, "Авторитет": 90, "Дисциплина": 98 },
+                    secrets: [
+                        "Тайно коллекционирует кукол",
+                        "Пишет стихи в свободное время",
+                        "Идеально владеет 12 видами оружия"
+                    ]
+                },
+                {
+                    name: "Кэ Цин",
+                    title: "Нефритовое Равновесие",
+                    icon: "fa-bolt",
+                    description: "Ты – стремительный и прагматичный лидер, как Кэ Цин! Ты не полагаешься на богов и традиции, предпочитая решать проблемы здесь и сейчас своими силами. Твой острый ум, эффективность и готовность бросить вызов старому порядку делают тебя настоящим двигателем прогресса. Ты ценишь каждую секунду и всегда стремишься к лучшему будущему.",
+                    quote: "«Время — самый ценный ресурс. Не тратьте его напрасну.»",
+                    stats: { "Эффективность": 95, "Прагматизм": 90, "Скорость": 85, "Инновации": 92 },
+                    secrets: [
+                        "Работает по 20 часов в сутки",
+                        "Создала систему оптимизации Ли Юэ",
+                        "Мечтает о выходном"
+                    ]
+                }
+            ],
+            dendro: [
+                {
+                    name: "Нахида",
+                    title: "Младший Господь Кусанали",
+                    icon: "fa-leaf",
+                    description: "Ты - мудрая и сострадательная душа, как юная богиня мудрости Нахида! Твоя любовь к знаниям и стремление помочь каждому, кто в беде, не знает границ. Хотя ты обладаешь огромной силой, ты предпочитаешь решать проблемы мудростью и пониманием. Твоё сердце открыто для всех живых существ, и ты веришь в потенциал каждого человека.",
+                    quote: "«Знания должны служить жизни, а не наоборот. В каждом человеке есть семя великого.»",
+                    stats: { "Мудрость": 100, "Эмпатия": 95, "Знания": 90, "Любознательность": 98 },
+                    secrets: [
+                        "Может читать мысли через сны",
+                        "Знает все книги в Сумеру",
+                        "Тайно помогает студентам"
+                    ]
+                },
+                {
+                    name: "Тигнари",
+                    title: "Мудрец леса Авидьи",
+                    icon: "fa-tree",
+                    description: "Ты - внимательный и терпеливый наблюдатель, как мудрый Тигнари! Твоя любовь к природе и стремление к знаниям делают тебя идеальным исследователем. Ты предпочитаешь спокойную, размеренную жизнь, погружаясь в изучение тайн мира. Твоя способность замечать детали, которые ускользают от других, помогает тебе находить неожиданные решения сложных проблем.",
+                    quote: "«Каждая травинка имеет свою историю. Нужно лишь уметь слушать.»",
+                    stats: { "Наблюдение": 95, "Терпение": 90, "Интеллект": 85, "Аналитика": 92 },
+                    secrets: [
+                        "Составил гербарий всех растений Сумеру",
+                        "Может подражать голосам 20 видов птиц",
+                        "Разработал экосистему для пустыни"
+                    ]
+                }
+            ],
+            cryo: [
+                {
+                    name: "Аяка",
+                    title: "Дочь дома Камисато",
+                    icon: "fa-snowflake",
+                    description: "Ты - элегантная и утончённая душа, как прекрасная Аяка! Твои манеры и чувство стиля безупречны, а внутренняя сила и решимость скрываются за внешней хрупкостью. Ты верна своим принципам и готова пойти на всё, чтобы защитить тех, кто тебе дорог. Твой танец с мечом - это воплощение грации и силы, завораживающее каждого, кто его видит.",
+                    quote: "«Меч — продолжение души. Каждое движение должно быть наполнено смыслом и красотой.»",
+                    stats: { "Элегантность": 95, "Преданность": 90, "Грация": 85, "Честь": 98 },
+                    secrets: [
+                        "Владеет искусством каллиграфии",
+                        "Тайно мечтает о простой жизни",
+                        "Имеет коллекцию редких вееров"
+                    ]
+                },
+                {
+                    name: "Кэйа",
+                    title: "Морозный клинок Рыцаря Западного Ветра",
+                    icon: "fa-user-secret",
+                    description: "Ты - загадочный и обаятельный стратег, как неуловимый Кэйа! Твоя острая интуиция и способность предвидеть ходы противника делают тебя мастером тактики. Под твоей лёгкой и беззаботной манерой общения скрывается глубокий ум и сложное прошлое. Ты умеешь находить нестандартные решения и сохранять хладнокровие в самых опасных ситуациях.",
+                    quote: "«Тайны делают жизнь интереснее, не так ли? Иногда лучше не знать всех ответов.»",
+                    stats: { "Стратегия": 95, "Обаяние": 90, "Адаптивность": 85, "Интуиция": 88 },
+                    secrets: [
+                        "Знает все подземные ходы Мондштадта",
+                        "Мастер перевоплощения",
+                        "Тайный информатор"
+                    ]
+                }
+            ],
+            geo: [
+                {
+                    name: "Чжун Ли",
+                    title: "Консультант ритуального бюро Ваншэн",
+                    icon: "fa-gem",
+                    description: "Ты - мудрый и невозмутимый стратег, как загадочный Чжун Ли! Твои знания истории и культуры безграничны, а вкус к изысканным вещам безупречен. Ты сохраняешь спокойствие в любой ситуации, анализируя её с холодной точностью. Хотя ты можешь казаться немного отстранённым, твоя забота о близких проявляется в твоих действиях, а не словах.",
+                    quote: "«Контракты должны соблюдаться, ведь в них заключается сущность цивилизации.»",
+                    stats: { "Мудрость": 100, "Спокойствие": 95, "Знания": 90, "Эрудиция": 98 },
+                    secrets: [
+                        "Свидетель 6000 лет истории",
+                        "Коллекционирует редкие камни",
+                        "Знает цену всему в Тейвате"
+                    ]
+                },
+                {
+                    name: "Альбедо",
+                    title: "Принц Халки",
+                    icon: "fa-paint-brush",
+                    description: "Ты - гениальный и любознательный исследователь, как таинственный Альбедо! Твоя страсть к науке и искусству не знает границ, а способность видеть красоту в мельчайших деталях мира поражает. Ты постоянно ищешь ответы на фундаментальные вопросы бытия, балансируя на грани между творчеством и научным исследованием. Твои эксперименты могут изменить мир!",
+                    quote: "«Истина скрыта в деталях. Каждый штрих, каждый элемент имеет значение в великой картине мироздания.»",
+                    stats: { "Интеллект": 95, "Креативность": 90, "Любопытство": 85, "Перфекционизм": 92 },
+                    secrets: [
+                        "Проводит алхимические эксперименты",
+                        "Создал жизнь в лаборатории",
+                        "Изучает природу человека"
+                    ]
+                }
+            ]
+        };
+        
+        // Переменные состояния
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(undefined);
+        let resultCalculated = false;
+        let anemoClickCount = 0;
+        let secretAreasClicked = [];
+        
+        // Элементы DOM
+        const questionContainer = document.getElementById('question-container');
+        const resultContainer = document.getElementById('result-container');
+        const testContainer = document.querySelector('.test-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const secretMessage = document.getElementById('secret-message');
+        const messageContent = document.getElementById('message-content');
+        const primogemMessage = document.getElementById('primogem-message');
+        const secretArchive = document.getElementById('secret-archive');
+        const closeMessageBtn = document.getElementById('close-message-btn');
+        
+        // Инициализация теста
+        function initTest() {
+            showQuestion(currentQuestion);
+            updateProgress();
+            createFloatingElements();
+            setupEasterEggs();
+            setupEventListeners();
+        }
+        
+        // Настройка пасхалок
+        function setupEasterEggs() {
+            // 1. Секретные области
+            document.querySelectorAll('.secret-area').forEach((area, index) => {
+                area.addEventListener('click', () => {
+                    if (!secretAreasClicked.includes(index)) {
+                        secretAreasClicked.push(index);
+                        createCicinsEffect(area);
+                    }
+                    
+                    if (secretAreasClicked.length === 5) {
+                        showSecretMessage('Поздравляем! Вы нашли все секретные области Тейвата!<br><br>'
+                            + 'Знаете ли вы, что в Genshin Impact существует более 40 скрытых областей,'
+                            + ' таких как Энканомия, Подземелья Хиличурлов и Забытые острова?');
+                    }
+                });
+            });
+            
+            // 2. Секретный архив
+            secretArchive.addEventListener('click', () => {
+                showSecretMessage('Секретный архив Тейвата открыт!<br><br>'
+                    + 'Знаете ли вы, что:<ul style="text-align:left">'
+                    + '<li>Первоначальное название Genshin Impact было "Project X"</li>'
+                    + '<li>Дизайн Паймон менялся 7 раз во время разработки</li>'
+                    + '<li>Самый сложный баг в истории игры заставлял Цицинов летать под землей</li></ul>');
+            });
+            
+            // 3. Комбинация клавиш
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.altKey && e.key === 'g') {
+                    showSecretMessage('Секретная комбинация активирована!<br><br>'
+                        + 'Вы получили доступ к скрытой информации:<br>'
+                        + '<div class="hint">Версия теста: 2.8<br>'
+                        + 'Секретный код: TE$T-C0D3-7EYV47</div>');
+                }
+            });
+            
+            // 4. Двойной клик на прогресс-бар
+            progressContainer.addEventListener('dblclick', () => {
+                showPrimogemMessage();
+            });
+            
+            // 5. Клики на элемент Анемо
+            document.querySelector('.element.anemo').addEventListener('click', function() {
+                anemoClickCount++;
+                if (anemoClickCount === 7) {
+                    showSecretMessage('Семь ветров приветствуют тебя, путник!<br><br>'
+                        + 'Вы активировали секрет Барда Ветров. Знаете ли вы, что:'
+                        + '<ul style="text-align:left">'
+                        + '<li>Венти - самый старый играбельный персонаж в Тейвате</li>'
+                        + '<li>Его прототипом стал герой немецкой мифологии</li>'
+                        + '<li>Его цитра имеет 12 струн, хотя в игре звучат только 6</li></ul>');
+                    anemoClickCount = 0;
+                }
+            });
+            
+            // Старые пасхалки
+            document.getElementById('secret-paimon-btn').addEventListener('click', () => {
+                showSecretMessage('Поздравляю! Вы нашли секретную Паймон!<br><br>Знаете ли вы, что Паймон может летать быстрее, чем кажется?<br><br>Если очень постараться, она может обогнать даже ветер!');
+            });
+            
+            document.getElementById('secret-teyvat-btn').addEventListener('click', () => {
+                showSecretMessage('О, ты нашёл секрет!<br><br>Знаете ли вы, что в Genshin Impact более 1000 скрытых достижений?<br><br>Продолжайте исследовать!');
+            });
+            
+            document.getElementById('paimon-food-btn').addEventListener('click', () => {
+                showSecretMessage('Интересный факт о путешественниках...<br><br>Оказывается, в самом начале игры, когда Паймон говорит, что "Паймон не еда", это отсылка к очень старой шутке сообщества.<br><br>Хотя, если очень голодно, можно попробовать...');
+            });
+            
+            document.getElementById('zhongli-wisdom-btn').addEventListener('click', () => {
+                showSecretMessage('Вы нашли секретную кнопку!<br><br>Вот вам мудрость от Чжун Ли:<br><br><i>"Контракты должны соблюдаться, ведь в них заключается сущность цивилизации."</i>');
+            });
+        }
+        
+        // Настройка основных обработчиков событий
+        function setupEventListeners() {
+            // Навигационные кнопки
+            prevBtn.addEventListener('click', showPrevQuestion);
+            nextBtn.addEventListener('click', showNextQuestion);
+            
+            // Элементы стихий
+            document.querySelectorAll('.element').forEach(element => {
+                element.addEventListener('click', createPrimogem);
+            });
+            
+            // Закрытие сообщений
+            closeMessageBtn.addEventListener('click', closeSecretMessage);
+            document.querySelector('.primogem-message .close-btn').addEventListener('click', closePrimogemMessage);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeSecretMessage();
+                    closePrimogemMessage();
+                }
+            });
+        }
+        
+        // Создать эффект Цицинов
+        function createCicinsEffect(element) {
+            for (let i = 0; i < 5; i++) {
+                const cicin = document.createElement('div');
+                cicin.className = 'cicins-effect';
+                const rect = element.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                
+                cicin.style.left = `${x}px`;
+                cicin.style.top = `${y}px`;
+                document.body.appendChild(cicin);
+                
+                // Анимация
+                setTimeout(() => {
+                    cicin.style.transition = 'all 1.5s cubic-bezier(0.19, 1, 0.22, 1)';
+                    cicin.style.opacity = '1';
+                    cicin.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px) scale(2)`;
+                }, 10);
+                
+                setTimeout(() => {
+                    cicin.remove();
+                }, 1500);
+            }
+        }
+        
+        // Показать сообщение о примогемах
+        function showPrimogemMessage() {
+            primogemMessage.style.display = 'block';
+        }
+        
+        // Закрыть сообщение о примогемах
+        function closePrimogemMessage() {
+            primogemMessage.style.display = 'none';
+        }
+        
+        // Показать секретное сообщение
+        function showSecretMessage(message) {
+            messageContent.innerHTML = message;
+            secretMessage.style.display = 'block';
+        }
+        
+        // Закрыть секретное сообщение
+        function closeSecretMessage() {
+            secretMessage.style.display = 'none';
+        }
+        
+        // Создать плавающие элементы фона
+        function createFloatingElements() {
+            const elements = ['Anemo', 'Geo', 'Electro', 'Dendro', 'Hydro', 'Pyro', 'Cryo'];
+            const body = document.querySelector('body');
+            const container = document.querySelector('.container');
+            for (let i = 0; i < 15; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                const randomElement = elements[Math.floor(Math.random() * elements.length)];
+                const size = 20 + Math.random() * 40;
+                const duration = 15 + Math.random() * 20;
+                const delay = Math.random() * 5;
+                element.style.background = `url('https://ambr.top/images/icons/UI_Gacha_Element_${randomElement}.png')  center/contain no-repeat`;
+                element.style.width = `${size}px`;
+                element.style.height = `${size}px`;
+                element.style.top = `${Math.random() * 100}%`;
+                element.style.left = `${Math.random() * 100}%`;
+                element.style.animationDuration = `${duration}s`;
+                element.style.animationDelay = `${delay}s`;
+                body.insertBefore(element, container);
+            }
+        }
+        
+        // Показать вопрос
+        function showQuestion(index) {
+            const question = questions[index];
+            let optionsHTML = '';
+            question.options.forEach((option, i) => {
+                const isSelected = answers[index] === i;
+                optionsHTML += `
+                    <div class="option ${isSelected ? 'selected' : ''}" data-index="${i}">
+                        <div class="option-icon">
+                            <i class="fas ${option.icon}"></i>
+                        </div>
+                        <div class="option-text">${option.text}</div>
+                        <div class="option-secret">${option.secret}</div>
+                    </div>
+                `;
+            });
+            questionContainer.innerHTML = `
+                <div class="question">
+                    <h2><i class="fas ${question.icon}"></i> ${question.question}</h2>
+                    <div class="options">${optionsHTML}</div>
+                    <div class="hint">${getRandomHint()}</div>
+                </div>
+            `;
+            
+            // Добавляем обработчики выбора
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const selectedIndex = parseInt(option.dataset.index);
+                    answers[currentQuestion] = selectedIndex;
+                    updateProgress();
+                    showQuestion(currentQuestion);
+                });
+            });
+            
+            updateNavigationButtons();
+        }
+        
+        // Обновление состояния навигационных кнопок
+        function updateNavigationButtons() {
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.disabled = answers[currentQuestion] === undefined;
+            nextBtn.innerHTML = currentQuestion === questions.length - 1 ?
+                'Узнать результат <i class="fas fa-star"></i>' : 
+                'Далее <i class="fas fa-arrow-right"></i>';
+        }
+        
+        // Случайные подсказки
+        function getRandomHint() {
+            const hints = [
+                "Паймон подсказывает: выбирайте сердцем!",
+                "Архонты наблюдают за вашим выбором...",
+                "Помните: нет правильных или неправильных ответов!",
+                "Ваши ответы определят вашу судьбу в Тейвате!",
+                "Паймон голодна... Но она подождёт, пока вы пройдёте тест!",
+                "Знаете ли вы? В этом тесте спрятано 7 пасхалок!"
+            ];
+            return hints[Math.floor(Math.random() * hints.length)];
+        }
+        
+        // Обновить прогресс бар
+        function updateProgress() {
+            const answeredQuestions = answers.filter(answer => answer !== undefined).length;
+            const progress = (answeredQuestions / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        // Показать предыдущий вопрос
+        function showPrevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+        }
+        
+        // Показать следующий вопрос
+        function showNextQuestion() {
+            if (answers[currentQuestion] === undefined) return;
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                calculateResult();
+            }
+        }
+        
+        // Рассчитать результат
+        function calculateResult() {
+            if (resultCalculated) return;
+            
+            const elementCount = { pyro: 0, hydro: 0, anemo: 0, electro: 0, dendro: 0, cryo: 0, geo: 0 };
+            
+            answers.forEach((answerIndex, questionIndex) => {
+                if (answerIndex !== undefined) {
+                    const element = questions[questionIndex].options[answerIndex].element;
+                    elementCount[element]++;
+                }
+            });
+            
+            let maxElement = 'pyro';
+            let maxCount = 0;
+            
+            for (const element in elementCount) {
+                if (elementCount[element] > maxCount) {
+                    maxElement = element;
+                    maxCount = elementCount[element];
+                }
+            }
+            
+            const characterList = characters[maxElement];
+            const selectedCharacter = characterList[Math.floor(Math.random() * characterList.length)];
+            showResult(selectedCharacter);
+            resultCalculated = true;
+        }
+        
+        // Показать результат
+        function showResult(character) {
+            testContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            
+            let statsHTML = '';
+            for (const stat in character.stats) {
+                statsHTML += `
+                    <div class="stat">
+                        <div class="stat-value">${character.stats[stat]}</div>
+                        <div class="stat-label">${stat}</div>
+                    </div>
+                `;
+            }
+            
+            let secretsHTML = '';
+            character.secrets.forEach(secret => {
+                secretsHTML += `<li>${secret}</li>`;
+            });
+            
+            resultContainer.innerHTML = `
+                <h2><i class="fas ${character.icon}"></i> Поздравляем! Ты - ${character.name}!</h2>
+                <div class="character-card">
+                    <div class="character-image">
+                        <i class="fas ${character.icon}"></i>
+                    </div>
+                    <h3 class="character-name">${character.name}</h3>
+                    <p class="character-title">${character.title}</p>
+                    <div class="character-quote">"${character.quote}"</div>
+                    <p class="character-description">${character.description}</p>
+                    <h3 style="margin-top:20px;color:#a3d9ff;">Характеристики:</h3>
+                    <div class="character-stats">${statsHTML}</div>
+                    <h3 style="margin-top:20px;color:#a3d9ff;">Секреты ${character.name}:</h3>
+                    <ul class="character-description" style="list-style-position: inside;">${secretsHTML}</ul>
+                    <p class="hint comic">Поздравляем! Теперь вы можете требовать у друзей призовые Примогемы!</p>
+                    <button class="btn-restart" id="restart-btn">
+                        <i class="fas fa-redo"></i> Пройти тест ещё раз
+                    </button>
+                </div>
+                <div class="hint">
+                    <i class="fas fa-lightbulb"></i> Интересный факт: Этот персонаж имеет ${Math.floor(Math.random() * 3) + 3}-звёздочный рейтинг в вашем сердце!
+                </div>
+            `;
+            
+            // Назначить обработчик для кнопки перезапуска
+            document.getElementById('restart-btn').addEventListener('click', restartTest);
+        }
+        
+        // Перезапустить тест
+        function restartTest() {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(undefined);
+            resultCalculated = false;
+            testContainer.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+            showQuestion(currentQuestion);
+            updateProgress();
+            updateNavigationButtons();
+            
+            // Сброс прогресс-бара
+            progressBar.style.width = '0%';
+            
+            // Сброс счетчиков пасхалок
+            anemoClickCount = 0;
+            secretAreasClicked = [];
+        }
+        
+        // Создать примогемы при клике на элемент
+        function createPrimogem(event) {
+            const primogem = document.createElement('div');
+            primogem.className = 'primogem';
+            const x = event.clientX;
+            const y = event.clientY;
+            primogem.style.left = `${x}px`;
+            primogem.style.top = `${y}px`;
+            document.body.appendChild(primogem);
+            
+            requestAnimationFrame(() => {
+                primogem.style.transition = 'all 1.5s cubic-bezier(0.19, 1, 0.22, 1)';
+                primogem.style.opacity = '1';
+                primogem.style.transform = `translate(${Math.random() * 100 - 50}px, -150px) scale(0.5) rotate(${Math.random() * 360}deg)`;
+            });
+            
+            setTimeout(() => {
+                primogem.remove();
+            }, 1500);
+        }
+        
+        // Запуск теста при загрузке
+        window.onload = initTest;
+    </script>
+</body>
+</html>
